@@ -154,4 +154,32 @@ Terra.describeViewports('DataGrid', ['medium', 'huge'], () => {
 
     Terra.validates.element('custom row/header heights', { selector: '#custom-height-data-grid' });
   });
+
+  describe('with highlighted column', () => {
+    beforeEach(() => {
+      browser.url('/raw/tests/terra-clinical-data-grid/clinical-data-grid/highlight-column-selectable-data-grid');
+    });
+
+    it('should display default highlighted column DataGrid', () => {
+      Terra.validates.element('default highlighted column', { selector: '#highlight-column-selectable-data-grid' });
+    });
+
+    it('should display DataGrid with hightight cell selections', () => {
+      $('[data-cell-label="section_0-0-Column-0"]').click();
+      Terra.validates.element('highlighted column cell selections', { selector: '#highlight-column-selectable-data-grid' });
+    });
+
+    it('should display DataGrid with row selections', () => {
+      $('#selections-example-Pinned-Row-Row-0-Section-section_0 > *:first-child').click();
+      $('#root').moveTo({ xoffset: 0, yoffset: 0 });
+
+      Terra.validates.element('highlighted column row selections', { selector: '#highlight-column-selectable-data-grid' });
+    });
+
+    it('should display DataGrid with column header selections', () => {
+      $('#highlight-column-selectable-data-grid [class*="HeaderCell"]:nth-child(2)').click();
+
+      Terra.validates.element('highlighted column header selections', { selector: '#highlight-column-selectable-data-grid' });
+    });
+  });
 });
