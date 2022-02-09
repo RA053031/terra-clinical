@@ -35,6 +35,8 @@ const propTypes = {
    * Boolean indicating whether the Cell is selectable.
    */
   isSelectable: PropTypes.bool,
+
+  shouldHighlightCell: PropTypes.bool,
   /**
    * Boolean indicating whether the Cell is actively selected.
    */
@@ -119,6 +121,7 @@ class Cell extends React.Component {
       onHoverStart,
       onHoverEnd,
       ariaLabel,
+      shouldHighlightCell,
       ...customProps
     } = this.props;
 
@@ -135,7 +138,7 @@ class Cell extends React.Component {
       >
         <div
           role={role}
-          className={cx(['content', { selectable: isSelectable, selected: isSelected }])}
+          className={cx(['content', { selectable: isSelectable, selected: isSelected, highlightlastloadcell: shouldHighlightCell }])}
           onClick={isSelectable ? this.handleTargetClick : undefined}
           onKeyDown={isSelectable ? this.handleKeyDown : undefined}
           onMouseEnter={onHoverStart}

@@ -930,6 +930,7 @@ class DataGrid extends React.Component {
         width={`${dataGridUtils.getWidthForColumn(column, defaultColumnWidth)}px`}
         onSelect={onCellSelect}
         isSelectable={cell.isSelectable}
+        shouldHighlightCell={cell.shouldHighlightCell}
         isSelected={cell.isSelected}
         selectableRefCallback={(ref) => { this.cellRefs[cellKey] = ref; }}
       >

@@ -10,6 +10,16 @@
     position: relative;
   }
 
+  .highlightlastloadcell {
+    background-color: #FBEADB;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-left-color: #C97318;
+    border-right-style: solid;
+    border-right-width: 2px;
+    border-right-color: #C97318;
+  }
+
   .content {
     height: 100%;
     position: relative;
