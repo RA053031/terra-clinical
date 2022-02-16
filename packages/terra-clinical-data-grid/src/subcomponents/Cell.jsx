@@ -35,8 +35,22 @@ const propTypes = {
    * Boolean indicating whether the Cell is selectable.
    */
   isSelectable: PropTypes.bool,
-
+  /**
+   * Boolean indicating whether the cell should be highlighted with background styling.
+   */
   shouldHighlightCell: PropTypes.bool,
+  /**
+   * Boolean indicating whether the cell should be highlighted with background styling.
+   */
+  isLastloadFirstCell: PropTypes.bool,
+  /**
+   * Boolean indicating whether the cell should be highlighted with background styling.
+   */
+  isLastloadLastCell: PropTypes.bool,
+  /**
+   * Boolean indicating whether the cell should be styled with alternate background styling.
+   */
+  isStriped: PropTypes.bool,
   /**
    * Boolean indicating whether the Cell is actively selected.
    */
@@ -122,6 +136,9 @@ class Cell extends React.Component {
       onHoverEnd,
       ariaLabel,
       shouldHighlightCell,
+      isLastloadFirstCell,
+      isLastloadLastCell,
+      isStriped,
       ...customProps
     } = this.props;
 
@@ -129,6 +146,7 @@ class Cell extends React.Component {
     const theme = this.context;
     const role = isSelectable ? 'button' : undefined;
     const tabIndex = isSelectable ? '0' : undefined;
+    const zibraStraping = shouldHighlightCell && (isStriped ? 'highlightcellstriped' : 'highlightcellnormal');
     return (
       <div
         {...customProps}
@@ -138,7 +156,9 @@ class Cell extends React.Component {
       >
         <div
           role={role}
-          className={cx(['content', { selectable: isSelectable, selected: isSelected, highlightlastloadcell: shouldHighlightCell }])}
+          className={cx(['content', zibraStraping, {
+            selectable: isSelectable, selected: isSelected, highlightcell: shouldHighlightCell, lastloadfirstcell: isLastloadFirstCell, lastloadlastCell: isLastloadLastCell,
+          }])}
           onClick={isSelectable ? this.handleTargetClick : undefined}
           onKeyDown={isSelectable ? this.handleKeyDown : undefined}
           onMouseEnter={onHoverStart}

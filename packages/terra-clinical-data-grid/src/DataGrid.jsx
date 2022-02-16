@@ -915,7 +915,7 @@ class DataGrid extends React.Component {
     );
   }
 
-  renderCell(section, row, column) {
+  renderCell(section, row, column, isStriped) {
     const { onCellSelect, defaultColumnWidth } = this.props;
 
     const cell = (row.cells && row.cells.find(searchCell => searchCell.columnId === column.id)) || {};
@@ -931,6 +931,9 @@ class DataGrid extends React.Component {
         onSelect={onCellSelect}
         isSelectable={cell.isSelectable}
         shouldHighlightCell={cell.shouldHighlightCell}
+        isLastloadFirstCell={cell.isLastloadFirstCell}
+        isLastloadLastCell={cell.isLastloadLastCell}
+        isStriped={isStriped}
         isSelected={cell.isSelected}
         selectableRefCallback={(ref) => { this.cellRefs[cellKey] = ref; }}
       >
@@ -942,7 +945,6 @@ class DataGrid extends React.Component {
   renderRow(row, section, columns, width, isPinned, isStriped) {
     const { id } = this.props;
     const height = row.height || this.props.rowHeight;
-
     /**
      * Because of the DOM structure necessary to properly render the pinned and overflow sections,
      * each 'row' of the DataGrid is actually two rows, side-by-side. However, we can use aria attributes
@@ -977,7 +979,7 @@ class DataGrid extends React.Component {
             return undefined;
           }
 
-          return this.renderCell(section, row, column);
+          return this.renderCell(section, row, column, isStriped);
         })}
       </Row>
     );

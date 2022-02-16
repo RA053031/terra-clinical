@@ -10,14 +10,32 @@
     position: relative;
   }
 
-  .highlightlastloadcell {
-    background-color: #FBEADB;
+  .highlightcell {
     border-left-style: solid;
     border-left-width: 2px;
     border-left-color: #C97318;
     border-right-style: solid;
     border-right-width: 2px;
     border-right-color: #C97318;
+  }
+
+  .lastloadfirstcell {
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-top-color: #C97318;
+  }
+
+  .lastloadlastcell {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: #C97318;
+  }
+
+  .highlightcellnormal {
+    background-color: #FDE9DC;
+  }
+  .highlightcellstriped {
+    background-color: #F3E2D7;
   }
 
   .content {
