@@ -90,6 +90,7 @@ class PagedContentDataGrid extends React.Component {
       <div id="paged-data-grid" className={cx('content-wrapper')}>
         <DataGrid
           id="paging-example"
+          columnHighlightIndex="Column-5"
           pinnedColumns={pinnedColumns}
           overflowColumns={overflowColumns}
           sections={this.state.sections}

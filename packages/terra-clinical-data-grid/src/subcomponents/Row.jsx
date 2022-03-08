@@ -70,11 +70,11 @@ class Row extends React.Component {
     const theme = this.context;
 
     const rowClass = classNames(
-      cx(
+      cx([
         'row',
         { selected: isSelected, striped: isStriped },
         theme.className,
-      ),
+      ]),
       customProps.className,
     );
 

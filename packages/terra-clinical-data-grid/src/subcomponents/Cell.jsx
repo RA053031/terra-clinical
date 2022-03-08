@@ -38,15 +38,15 @@ const propTypes = {
   /**
    * Boolean indicating whether the cell should be highlighted with background styling.
    */
-  shouldHighlightCell: PropTypes.bool,
+  columnHighlightIndex: PropTypes.string,
   /**
    * Boolean indicating whether the cell should be highlighted with background styling.
    */
-  isLastloadFirstCell: PropTypes.bool,
+  isColumnHighlightFirstCell: PropTypes.bool,
   /**
    * Boolean indicating whether the cell should be highlighted with background styling.
    */
-  isLastloadLastCell: PropTypes.bool,
+  isColumnHighlightLastCell: PropTypes.bool,
   /**
    * Boolean indicating whether the cell should be styled with alternate background styling.
    */
@@ -55,6 +55,7 @@ const propTypes = {
    * Boolean indicating whether the Cell is actively selected.
    */
   isSelected: PropTypes.bool,
+  isRowSelected: PropTypes.bool,
   /**
    * Function that will be called upon Cell selection. The `isSelectable` prop must be true for this function to be called.
    * Parameters: `onSelect(sectionId, rowId, columnId)`
@@ -135,9 +136,10 @@ class Cell extends React.Component {
       onHoverStart,
       onHoverEnd,
       ariaLabel,
-      shouldHighlightCell,
-      isLastloadFirstCell,
-      isLastloadLastCell,
+      columnHighlightIndex,
+      isColumnHighlightFirstCell,
+      isColumnHighlightLastCell,
+      isRowSelected,
       isStriped,
       ...customProps
     } = this.props;
@@ -146,7 +148,17 @@ class Cell extends React.Component {
     const theme = this.context;
     const role = isSelectable ? 'button' : undefined;
     const tabIndex = isSelectable ? '0' : undefined;
-    const zibraStraping = shouldHighlightCell && (isStriped ? 'highlightcellstriped' : 'highlightcellnormal');
+    const isHighlightCell = columnId === columnHighlightIndex;
+    const zebraStriping = !isRowSelected && (isStriped ? 'striped' : 'normal');
+
+    const highlightCellClassNames = isHighlightCell && cx([
+      'highlightcell',
+      { firstcell: isColumnHighlightFirstCell },
+      { lastcell: isColumnHighlightLastCell },
+      { highlightedcellrowselected: isRowSelected },
+      zebraStriping,
+    ]);
+
     return (
       <div
         {...customProps}
@@ -156,8 +168,8 @@ class Cell extends React.Component {
       >
         <div
           role={role}
-          className={cx(['content', zibraStraping, {
-            selectable: isSelectable, selected: isSelected, highlightcell: shouldHighlightCell, lastloadfirstcell: isLastloadFirstCell, lastloadlastCell: isLastloadLastCell,
+          className={cx(['content', isHighlightCell && highlightCellClassNames, {
+            selectable: isSelectable, selected: isSelected,
           }])}
           onClick={isSelectable ? this.handleTargetClick : undefined}
           onKeyDown={isSelectable ? this.handleKeyDown : undefined}
