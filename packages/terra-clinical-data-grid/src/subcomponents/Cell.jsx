@@ -151,11 +151,10 @@ class Cell extends React.Component {
     const isHighlightCell = columnId === columnHighlightIndex;
     const zebraStriping = !isRowSelected && (isStriped ? 'striped' : 'normal');
 
-    const highlightCellClassNames = isHighlightCell && cx([
+    const highlightCellClassNames = !isSelected && !isRowSelected && isHighlightCell && cx([
       'highlightcell',
       { firstcell: isColumnHighlightFirstCell },
       { lastcell: isColumnHighlightLastCell },
-      { highlightedcellrowselected: isRowSelected },
       zebraStriping,
     ]);
 
@@ -168,7 +167,7 @@ class Cell extends React.Component {
       >
         <div
           role={role}
-          className={cx(['content', isHighlightCell && highlightCellClassNames, {
+          className={cx(['content', highlightCellClassNames, {
             selectable: isSelectable, selected: isSelected,
           }])}
           onClick={isSelectable ? this.handleTargetClick : undefined}
