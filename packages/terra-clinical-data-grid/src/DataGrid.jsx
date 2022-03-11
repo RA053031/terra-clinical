@@ -990,12 +990,15 @@ class DataGrid extends React.Component {
     );
   }
 
-  renderSection(section, columns, width, isPinned) {
+  renderSection(section, columns, width, isPinned, sectionIndex) {
+    const { sections } = this.props;
+    const isFirstSection = sectionIndex === 0;
+    const isLastSection = sectionIndex === sections.length - 1;
     return (
       <React.Fragment key={section.id}>
         {this.renderSectionHeader(section, isPinned)}
         {!section.isCollapsed && section.rows && section.rows.map((row, index) => (
-          this.renderRow(row, section, columns, width, isPinned, !!(index % 2), index === 0, index === section.rows.length - 1)
+          this.renderRow(row, section, columns, width, isPinned, !!(index % 2), isFirstSection && index === 0, isLastSection && index === section.rows.length - 1)
         ))}
       </React.Fragment>
     );
@@ -1016,7 +1019,7 @@ class DataGrid extends React.Component {
             </div>
           </div>
         )}
-        {sections.map(section => this.renderSection(section, dataGridUtils.getPinnedColumns(this.props), `${pinnedColumnWidth}px`, true))}
+        {sections.map((section, index) => this.renderSection(section, dataGridUtils.getPinnedColumns(this.props), `${pinnedColumnWidth}px`, true, index))}
       </React.Fragment>
     );
   }
@@ -1036,7 +1039,7 @@ class DataGrid extends React.Component {
             </div>
           </div>
         )}
-        {sections.map(section => this.renderSection(section, dataGridUtils.getOverflowColumns(this.props), `${overflowColumnWidth}px`))}
+        {sections.map((section, index) => this.renderSection(section, dataGridUtils.getOverflowColumns(this.props), `${overflowColumnWidth}px`, false, index))}
       </React.Fragment>
     );
   }

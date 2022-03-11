@@ -10,38 +10,23 @@
     position: relative;
   }
 
-  .highlightcell {
-    &:not(:hover) {
-    border-left-style: solid;
-    border-left-width: 1px;
-    border-left-color: #C97318;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-right-color: #C97318;
-    }
+  .highlightcell:not(:hover):not(:focus) {
+    box-shadow: var(--terra-clinical-data-grid-highlight-cell-box-shadow, inset 1px 0 0 0 #C97318, inset -1px 0 0 0 #C97318);
   }
 
-  .highlightcell.firstcell {
-    &:not(:hover) {
-    border-top-style: solid;
-    border-top-width: 1px;
-    border-top-color: #C97318;
-    }
+  .highlightcell.firstcell:not(:hover):not(:focus) {
+    box-shadow: var(--terra-clinical-data-grid-highlight-first-cell-box-shadow, inset 1px 0 0 0 #C97318, inset -1px 0 0 0 #C97318, inset 0 1px 0 0 #C97318);
   }
 
-  .highlightcell.lastcell {
-    &:not(:hover) {
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: #C97318;
-    }
+  .highlightcell.lastcell:not(:hover):not(:focus) {
+    box-shadow: var(--terra-clinical-data-grid-highlight-last-cell-box-shadow, inset 1px 0 0 0 #C97318, inset -1px 0 0 0 #C97318, inset 0 -1px 0 0 #C97318);
   }
 
   .highlightcell.normal {
-    background-color: #FDE9DC;
+    background-color: var(--terra-clinical-data-grid-highlight-normal-cell-background-color, #FBEADB);
   }
   .highlightcell.striped {
-    background-color: #F3E2D7;
+    background-color: var(--terra-clinical-data-grid-highlight-striped-cell-background-color, #F3E2D7);
   }
 
   .content {
