@@ -20,7 +20,7 @@ const propTypes = {
    */
   sectionId: PropTypes.string.isRequired,
   /**
-   * String identifer of the row in which the Cell will be rendered.
+   * String identifier of the row in which the Cell will be rendered.
    */
   rowId: PropTypes.string.isRequired,
   /**
@@ -36,26 +36,9 @@ const propTypes = {
    */
   isSelectable: PropTypes.bool,
   /**
-   * Boolean indicating whether the cell should be highlighted with background styling.
-   */
-  columnHighlightIndex: PropTypes.string,
-  /**
-   * Boolean indicating whether the cell should be highlighted with background styling.
-   */
-  isColumnHighlightFirstCell: PropTypes.bool,
-  /**
-   * Boolean indicating whether the cell should be highlighted with background styling.
-   */
-  isColumnHighlightLastCell: PropTypes.bool,
-  /**
-   * Boolean indicating whether the cell should be styled with alternate background styling.
-   */
-  isStriped: PropTypes.bool,
-  /**
    * Boolean indicating whether the Cell is actively selected.
    */
   isSelected: PropTypes.bool,
-  isRowSelected: PropTypes.bool,
   /**
    * Function that will be called upon Cell selection. The `isSelectable` prop must be true for this function to be called.
    * Parameters: `onSelect(sectionId, rowId, columnId)`
@@ -79,6 +62,18 @@ const propTypes = {
    * Function that will be called with a ref to the Cell's selectable element. Parameters: `selectableRefCallback(selectableRef)`
    */
   selectableRefCallback: PropTypes.func,
+  /**
+   * Boolean indicating whether the cell should be highlighted with background styling.
+   */
+  isColumnHighlighted: PropTypes.string,
+  /**
+   * Boolean indicating whether the cell is in the first row, also used with column highlight background styling.
+   */
+  isFirstRow: PropTypes.bool,
+  /**
+   * Boolean indicating whether the cell is in the last row, also used with column highlight background styling.
+   */
+  isLastRow: PropTypes.bool,
 };
 
 class Cell extends React.Component {
@@ -136,11 +131,9 @@ class Cell extends React.Component {
       onHoverStart,
       onHoverEnd,
       ariaLabel,
-      columnHighlightIndex,
-      isColumnHighlightFirstCell,
-      isColumnHighlightLastCell,
-      isRowSelected,
-      isStriped,
+      isColumnHighlighted,
+      isFirstRow,
+      isLastRow,
       ...customProps
     } = this.props;
 
@@ -148,14 +141,11 @@ class Cell extends React.Component {
     const theme = this.context;
     const role = isSelectable ? 'button' : undefined;
     const tabIndex = isSelectable ? '0' : undefined;
-    const isHighlightCell = columnId === columnHighlightIndex;
-    const zebraStriping = !isRowSelected && (isStriped ? 'striped' : 'normal');
 
-    const highlightCellClassNames = !isSelected && !isRowSelected && isHighlightCell && cx([
-      'highlightcell',
-      { firstcell: isColumnHighlightFirstCell },
-      { lastcell: isColumnHighlightLastCell },
-      zebraStriping,
+    const highlightCellClassNames = !isSelected && isColumnHighlighted && cx([
+      'highlighted',
+      { first: isFirstRow },
+      { last: isLastRow },
     ]);
 
     return (
@@ -167,9 +157,12 @@ class Cell extends React.Component {
       >
         <div
           role={role}
-          className={cx(['content', highlightCellClassNames, {
-            selectable: isSelectable, selected: isSelected,
-          }])}
+          className={cx([
+            'content',
+            highlightCellClassNames,
+            { selectable: isSelectable },
+            { selected: isSelected },
+          ])}
           onClick={isSelectable ? this.handleTargetClick : undefined}
           onKeyDown={isSelectable ? this.handleKeyDown : undefined}
           onMouseEnter={onHoverStart}

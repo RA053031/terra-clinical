@@ -1,13 +1,12 @@
 import React from 'react';
 import DataGrid from 'terra-clinical-data-grid';
 import classNames from 'classnames/bind';
-
 import ContentCellLayout from './ContentCellLayout';
-import styles from './ClinicalDataGridCommon.test.module.scss';
+import styles from './Datagrid.module.scss';
 
 const cx = classNames.bind(styles);
 
-class SelectableDataGrid extends React.Component {
+class DatagridWithColumnHighlight extends React.Component {
   constructor(props) {
     super(props);
 
@@ -70,14 +69,13 @@ class SelectableDataGrid extends React.Component {
   buildRows(sectionId, num) {
     const rows = (new Array(num)).fill().map((rowVal, rowIndex) => ({
       id: `Row-${rowIndex}`,
-      ariaLabel: `Row ${sectionId}-${rowIndex}`,
       isSelectable: true,
       isSelected: this.state.selectedRow && this.state.selectedRow.sectionId === sectionId && this.state.selectedRow.rowId === `Row-${rowIndex}`,
       cells: ((new Array(7).fill(0)).map((cellVal, cellIndex) => (`Column-${cellIndex}`))).map(columnKey => ({
         columnId: columnKey,
         isSelectable: true,
         isSelected: this.state.selectedCell && this.state.selectedCell.sectionId === sectionId && this.state.selectedCell.rowId === `Row-${rowIndex}` && this.state.selectedCell.columnId === columnKey,
-        component: <ContentCellLayout text={`Row-${rowIndex}, ${columnKey}`} label={`${sectionId}-${rowIndex}-${columnKey}`} />,
+        component: <ContentCellLayout text={`Row-${rowIndex}, ${columnKey}`} />,
       })),
     }));
 
@@ -88,7 +86,6 @@ class SelectableDataGrid extends React.Component {
     return {
       id: sectionId,
       text: sectionName,
-      isCollapsible: sectionId === 'section_1',
       rows: this.buildRows(sectionId, numberOfRows),
     };
   }
@@ -97,9 +94,10 @@ class SelectableDataGrid extends React.Component {
     const { columns } = this.state;
 
     return (
-      <div id="selectable-data-grid" className={cx('content-wrapper')}>
+      <div className={cx('data-grid-basic')}>
         <DataGrid
           id="selections-example"
+          columnHighlightId="Column-3"
           pinnedColumns={[
             columns['Column-0'],
             columns['Column-1'],
@@ -112,8 +110,8 @@ class SelectableDataGrid extends React.Component {
             columns['Column-6'],
           ]}
           sections={[
-            this.buildSection('section_0', 'Section 0', 15),
-            this.buildSection('section_1', 'Section 1', 15),
+            this.buildSection('Section-0', 'Section 0', 15),
+            this.buildSection('Section-1', 'Section 1', 15),
           ]}
           fill
           onColumnSelect={(columnId) => {
@@ -163,4 +161,4 @@ class SelectableDataGrid extends React.Component {
   }
 }
 
-export default SelectableDataGrid;
+export default DatagridWithColumnHighlight;

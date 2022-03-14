@@ -112,7 +112,6 @@ class SubsectionDataGrid extends React.Component {
           id="subsections-example"
           pinnedColumns={pinnedColumns}
           overflowColumns={overflowColumns}
-          columnHighlightIndex="Column-5"
           sections={[
             this.buildSection('section_0', 'Section 0', 15),
             this.buildSection('section_1', 'Section 1', 15),

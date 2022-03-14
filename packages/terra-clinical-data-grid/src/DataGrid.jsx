@@ -34,6 +34,14 @@ const propTypes = {
    */
   id: PropTypes.string.isRequired,
   /**
+   * String name for a single [column id](/components/terra-clinical-data-grid/clinical-data-grid/clinical-data-grid#columns) unique identifier.
+   * If provided, prop will apply a specific highlighting style for that column in the DataGrid.
+   *
+   * ![IMPORTANT](https://badgen.net/badge/UX/Design-Standards/blue) The column highlight feature should be limited specifically to
+   * time and timeline concepts only, best used with special instruction and guidance from User Experience to ensure proper standards.
+   */
+  columnHighlightId: PropTypes.string,
+  /**
    * Data for columns that will be pinned. Columns will be presented in the order given.
    */
   pinnedColumns: PropTypes.arrayOf(columnDataShape),
@@ -112,10 +120,6 @@ const propTypes = {
    * Callback ref to pass into horizontal overflow container.
    */
   horizontalOverflowContainerRefCallback: PropTypes.func,
-  /**
-   * index of column which needs to be highlighted.
-   */
-  columnHighlightIndex: PropTypes.string,
 };
 
 const defaultProps = {
@@ -125,7 +129,6 @@ const defaultProps = {
   headerHeight: '2.5rem',
   defaultColumnWidth: 200,
   sections: [],
-  columnHighlightIndex: '',
 };
 
 /* eslint-disable react/sort-comp, react/forbid-dom-props */
@@ -877,7 +880,7 @@ class DataGrid extends React.Component {
   }
 
   renderRowSelectionCell(section, row, column) {
-    const { defaultColumnWidth } = this.props;
+    const { defaultColumnWidth, columnHighlightId } = this.props;
     const cellKey = `${section.id}-${row.id}-${column.id}`;
 
     return (
@@ -900,6 +903,7 @@ class DataGrid extends React.Component {
             const rowElements = this.dataGridContainerRef.querySelectorAll(`[data-row][data-row-id="${row.id}"][data-section-id="${section.id}"]`);
             for (let i = 0, numberOfRows = rowElements.length; i < numberOfRows; i += 1) {
               rowElements[i].classList.add(cxRow('hover'));
+              if (columnHighlightId) { rowElements[i].removeAttribute('data-column-allow-highlight'); }
             }
           }
         }
@@ -908,6 +912,7 @@ class DataGrid extends React.Component {
             const rowElements = this.dataGridContainerRef.querySelectorAll(`[data-row][data-row-id="${row.id}"][data-section-id="${section.id}"]`);
             for (let i = 0, numberOfRows = rowElements.length; i < numberOfRows; i += 1) {
               rowElements[i].classList.remove(cxRow('hover'));
+              if (columnHighlightId && !row.isSelected) { rowElements[i].setAttribute('data-column-allow-highlight', true); }
             }
           }
         }
@@ -920,10 +925,11 @@ class DataGrid extends React.Component {
     );
   }
 
-  renderCell(section, row, column, isStriped, isColumnHighlightFirstCell, isColumnHighlightLastCell) {
-    const { onCellSelect, defaultColumnWidth, columnHighlightIndex } = this.props;
+  renderCell(section, row, column, isFirstRow, isLastRow) {
+    const { onCellSelect, defaultColumnWidth, columnHighlightId } = this.props;
     const cell = (row.cells && row.cells.find(searchCell => searchCell.columnId === column.id)) || {};
     const cellKey = `${section.id}-${row.id}-${column.id}`;
+    const isHighlighted = (column.id === columnHighlightId);
 
     return (
       <Cell
@@ -934,20 +940,18 @@ class DataGrid extends React.Component {
         width={`${dataGridUtils.getWidthForColumn(column, defaultColumnWidth)}px`}
         onSelect={onCellSelect}
         isSelectable={cell.isSelectable}
-        columnHighlightIndex={columnHighlightIndex}
-        isColumnHighlightFirstCell={isColumnHighlightFirstCell}
-        isColumnHighlightLastCell={isColumnHighlightLastCell}
-        isRowSelected={row.isSelected}
-        isStriped={isStriped}
         isSelected={cell.isSelected}
         selectableRefCallback={(ref) => { this.cellRefs[cellKey] = ref; }}
+        isColumnHighlighted={isHighlighted}
+        isFirstRow={isFirstRow}
+        isLastRow={isLastRow}
       >
         {cell.component}
       </Cell>
     );
   }
 
-  renderRow(row, section, columns, width, isPinned, isStriped, isColumnHighlightFirstCell, isColumnHighlightLastCell) {
+  renderRow(row, section, columns, width, isPinned, isStriped, isAColumnHighlighted, isFirstRow, isLastRow) {
     const { id } = this.props;
     const height = row.height || this.props.rowHeight;
     /**
@@ -972,8 +976,8 @@ class DataGrid extends React.Component {
         height={height}
         isSelected={row.isSelected}
         isStriped={isStriped}
+        allowColumnHighlighting={isAColumnHighlighted && !row.isSelected}
         {...ariaStyles}
-
       >
         {columns.map((column) => {
           if (column.id === 'DataGrid-rowSelectionColumn') {
@@ -984,30 +988,27 @@ class DataGrid extends React.Component {
             return undefined;
           }
 
-          return this.renderCell(section, row, column, isStriped, isColumnHighlightFirstCell, isColumnHighlightLastCell);
+          return this.renderCell(section, row, column, isFirstRow, isLastRow);
         })}
       </Row>
     );
   }
 
-  renderSection(section, columns, width, isPinned, sectionIndex) {
-    const { sections } = this.props;
-    const isFirstSection = sectionIndex === 0;
-    const isLastSection = sectionIndex === sections.length - 1;
+  renderSection(section, columns, width, isFirstSection, isLastSection, isPinned) {
+    const { columnHighlightId } = this.props;
+
     return (
       <React.Fragment key={section.id}>
         {this.renderSectionHeader(section, isPinned)}
         {!section.isCollapsed && section.rows && section.rows.map((row, index) => (
-          this.renderRow(row, section, columns, width, isPinned, !!(index % 2), isFirstSection && index === 0, isLastSection && index === section.rows.length - 1)
+          this.renderRow(row, section, columns, width, isPinned, !!(index % 2), (columnHighlightId), (isFirstSection && index === 0), (isLastSection && index === section.rows.length - 1))
         ))}
       </React.Fragment>
     );
   }
 
   renderPinnedContent() {
-    const {
-      headerHeight, fill, sections,
-    } = this.props;
+    const { headerHeight, fill, sections } = this.props;
     const { pinnedColumnWidth } = this.state;
 
     return (
@@ -1019,15 +1020,15 @@ class DataGrid extends React.Component {
             </div>
           </div>
         )}
-        {sections.map((section, index) => this.renderSection(section, dataGridUtils.getPinnedColumns(this.props), `${pinnedColumnWidth}px`, true, index))}
+        {sections.map((section, index) => (
+          this.renderSection(section, dataGridUtils.getPinnedColumns(this.props), `${pinnedColumnWidth}px`, index === 0, index === sections.length - 1, true)
+        ))}
       </React.Fragment>
     );
   }
 
   renderOverflowContent() {
-    const {
-      headerHeight, fill, sections,
-    } = this.props;
+    const { headerHeight, fill, sections } = this.props;
     const { overflowColumnWidth } = this.state;
 
     return (
@@ -1039,7 +1040,9 @@ class DataGrid extends React.Component {
             </div>
           </div>
         )}
-        {sections.map((section, index) => this.renderSection(section, dataGridUtils.getOverflowColumns(this.props), `${overflowColumnWidth}px`, false, index))}
+        {sections.map((section, index) => (
+          this.renderSection(section, dataGridUtils.getOverflowColumns(this.props), `${overflowColumnWidth}px`, index === 0, index === sections.length - 1)
+        ))}
       </React.Fragment>
     );
   }
@@ -1086,7 +1089,7 @@ class DataGrid extends React.Component {
       intl,
       verticalOverflowContainerRefCallback,
       horizontalOverflowContainerRefCallback,
-      columnHighlightIndex,
+      columnHighlightId,
       ...customProps
     } = this.props;
     const { pinnedColumnWidth } = this.state;

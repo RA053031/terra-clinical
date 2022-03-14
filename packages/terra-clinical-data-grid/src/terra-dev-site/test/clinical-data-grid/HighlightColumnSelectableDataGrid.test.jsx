@@ -1,13 +1,12 @@
 import React from 'react';
 import DataGrid from 'terra-clinical-data-grid';
 import classNames from 'classnames/bind';
-
 import ContentCellLayout from './ContentCellLayout';
 import styles from './ClinicalDataGridCommon.test.module.scss';
 
 const cx = classNames.bind(styles);
 
-class SelectableDataGrid extends React.Component {
+class HighlightColumnSelectableDataGrid extends React.Component {
   constructor(props) {
     super(props);
 
@@ -100,12 +99,13 @@ class SelectableDataGrid extends React.Component {
       <div id="selectable-data-grid" className={cx('content-wrapper')}>
         <DataGrid
           id="selections-example"
+          columnHighlightId="Column-2"
           pinnedColumns={[
             columns['Column-0'],
-            columns['Column-1'],
-            columns['Column-2'],
           ]}
           overflowColumns={[
+            columns['Column-1'],
+            columns['Column-2'],
             columns['Column-3'],
             columns['Column-4'],
             columns['Column-5'],
@@ -163,4 +163,4 @@ class SelectableDataGrid extends React.Component {
   }
 }
 
-export default SelectableDataGrid;
+export default HighlightColumnSelectableDataGrid;
