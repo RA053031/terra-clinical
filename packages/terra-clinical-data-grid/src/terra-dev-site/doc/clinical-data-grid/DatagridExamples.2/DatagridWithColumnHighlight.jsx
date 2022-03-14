@@ -97,7 +97,7 @@ class DatagridWithColumnHighlight extends React.Component {
       <div className={cx('data-grid-basic')}>
         <DataGrid
           id="selections-example"
-          columnHighlightId="Column-3"
+          columnHighlightId="Column-4"
           pinnedColumns={[
             columns['Column-0'],
             columns['Column-1'],
