@@ -37,33 +37,9 @@ const overflowColumns = [
     id: 'Column-6',
     text: 'Column 6',
   },
-  {
-    id: 'Column-7',
-    text: 'Column 7',
-  },
-  {
-    id: 'Column-8',
-    text: 'Column 8',
-  },
-  {
-    id: 'Column-9',
-    text: 'Column 9',
-  },
-  {
-    id: 'Column-10',
-    text: 'Column 10',
-  },
-  {
-    id: 'Column-11',
-    text: 'Column 11',
-  },
-  {
-    id: 'Column-12',
-    text: 'Column 12',
-  },
 ];
 
-class NoPinnedColumnDataGrid extends React.Component {
+class HighlightColumnNotSelectableDataGrid extends React.Component {
   static buildRows(sectionId, num) {
     const rows = (new Array(num)).fill().map((rowVal, rowIndex) => ({
       id: `${sectionId}-${rowIndex}`,
@@ -80,19 +56,19 @@ class NoPinnedColumnDataGrid extends React.Component {
   static buildSection(sectionId, numberOfRows) {
     return {
       id: sectionId,
-      rows: NoPinnedColumnDataGrid.buildRows(sectionId, numberOfRows),
+      rows: HighlightColumnNotSelectableDataGrid.buildRows(sectionId, numberOfRows),
     };
   }
 
   render() {
     return (
-      <div id="no-pinned-column-data-grid" className={cx('content-wrapper')}>
+      <div id="highlight-column-not-selectable-data-grid" className={cx('content-wrapper')}>
         <DataGrid
-          id="no-pinned-column"
+          id="highlight-column-example"
           columnHighlightId="Column-2"
           overflowColumns={overflowColumns}
           sections={[
-            NoPinnedColumnDataGrid.buildSection('section_0', 30),
+            HighlightColumnNotSelectableDataGrid.buildSection('section_0', 19),
           ]}
           defaultColumnWidth={250}
           fill
@@ -102,4 +78,4 @@ class NoPinnedColumnDataGrid extends React.Component {
   }
 }
 
-export default NoPinnedColumnDataGrid;
+export default HighlightColumnNotSelectableDataGrid;

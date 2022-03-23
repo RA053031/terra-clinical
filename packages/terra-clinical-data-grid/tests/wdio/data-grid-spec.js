@@ -155,31 +155,46 @@ Terra.describeViewports('DataGrid', ['medium', 'huge'], () => {
     Terra.validates.element('custom row/header heights', { selector: '#custom-height-data-grid' });
   });
 
-  describe('with highlighted column', () => {
+  describe('with highlighted column not selectable', () => {
+    before(() => {
+      browser.url('/raw/tests/terra-clinical-data-grid/clinical-data-grid/highlight-column-not-selectable-data-grid');
+    });
+
+    it('should display highlighted column not selectable cells DataGrid', () => {
+      Terra.validates.element('highlighted column not selectable cells', { selector: '#highlight-column-not-selectable-data-grid' });
+    });
+  });
+
+  describe('with highlighted column selectable', () => {
     beforeEach(() => {
       browser.url('/raw/tests/terra-clinical-data-grid/clinical-data-grid/highlight-column-selectable-data-grid');
     });
 
-    it('should display default highlighted column DataGrid', () => {
-      Terra.validates.element('default highlighted column', { selector: '#highlight-column-selectable-data-grid' });
+    it('should display highlighted column selectable cells DataGrid', () => {
+      Terra.validates.element('highlighted column selectable cells', { selector: '#highlight-column-selectable-data-grid' });
     });
 
-    it('should display DataGrid with hightight cell selections', () => {
-      $('[data-cell-label="section_0-0-Column-0"]').click();
-      Terra.validates.element('highlighted column cell selections', { selector: '#highlight-column-selectable-data-grid' });
+    it('should display highlighted column selectable cells DataGrid with row hover', () => {
+      $('[data-accessibility-id="23"]').moveTo();
+      Terra.validates.element('highlighted column selectable cells row hover', { selector: '#highlight-column-selectable-data-grid' });
     });
 
-    it('should display DataGrid with row selections', () => {
-      $('#selections-example-Pinned-Row-Row-0-Section-section_0 > *:first-child').click();
+    it('should display highlighted column selectable cells DataGrid with row selection', () => {
+      $('[data-accessibility-id="23"]').click();
       $('#root').moveTo({ xoffset: 0, yoffset: 0 });
-
-      Terra.validates.element('highlighted column row selections', { selector: '#highlight-column-selectable-data-grid' });
+      Terra.validates.element('highlighted column selectable cells row selection', { selector: '#highlight-column-selectable-data-grid' });
     });
 
-    it('should display DataGrid with column header selections', () => {
-      $('#highlight-column-selectable-data-grid [class*="HeaderCell"]:nth-child(2)').click();
+    it('should display highlighted column selectable cells DataGrid with cell focus', () => {
+      $('[data-accessibility-id="25"]').click();
+      browser.keys(['Tab']);
+      Terra.validates.element('highlighted column selectable cells cell focus', { selector: '#highlight-column-selectable-data-grid' });
+    });
 
-      Terra.validates.element('highlighted column header selections', { selector: '#highlight-column-selectable-data-grid' });
+    it('should display highlighted column selectable cells DataGrid with cell selection', () => {
+      $('[data-accessibility-id="26"]').click();
+      $('#root').moveTo({ xoffset: 0, yoffset: 0 });
+      Terra.validates.element('highlighted column selectable cells cell selection', { selector: '#highlight-column-selectable-data-grid' });
     });
   });
 });

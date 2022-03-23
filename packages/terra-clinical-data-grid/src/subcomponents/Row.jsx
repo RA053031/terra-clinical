@@ -94,7 +94,7 @@ class Row extends React.Component {
         data-row
         data-row-id={rowId}
         data-section-id={sectionId}
-        data-column-allow-highlight={allowColumnHighlighting ? true : null}
+        data-column-allow-highlight={(!isSelected && allowColumnHighlighting) ? true : null}
       >
         {children}
       </div>

@@ -143,7 +143,8 @@ class Cell extends React.Component {
     const tabIndex = isSelectable ? '0' : undefined;
 
     const highlightCellClassNames = !isSelected && isColumnHighlighted && cx([
-      'highlighted',
+      { highlighted: !isSelectable },
+      { 'highlighted-selectable': isSelectable },
       { first: isFirstRow },
       { last: isLastRow },
     ]);

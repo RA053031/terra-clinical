@@ -98,8 +98,8 @@ class HighlightColumnSelectableDataGrid extends React.Component {
     return (
       <div id="highlight-column-selectable-data-grid" className={cx('content-wrapper')}>
         <DataGrid
-          id="selections-example"
-          columnHighlightId="Column-1"
+          id="highlight-column-selections-example"
+          columnHighlightId="Column-2"
           pinnedColumns={[
             columns['Column-0'],
           ]}
